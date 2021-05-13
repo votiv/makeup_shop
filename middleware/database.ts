@@ -14,7 +14,9 @@ const client = new MongoClient(MONGODB_URI, {
 
 const database = async (req, res, next) => {
 
-  if (!client.isConnected()) await client.connect()
+  if (!client.isConnected()) {
+    await client.connect()
+  }
 
   req.dbClient = client
   req.db = client.db('makeup_shop')

@@ -1,11 +1,19 @@
-import useSWR from 'swr'
+import useSWR, { useSWRInfinite } from 'swr'
 
 import { fetcher } from '../utils/fetcher'
 
-const Index = props => {
-  const { data, error } = useSWR('/api/products', fetcher)
+const PAGE_SIZE = 20
 
-  if (!data) {
+const getKey = (pageIndex, previousPageData) =>
+  (previousPageData && !previousPageData.length)
+    ? null
+    : `/api/products?perPage=${PAGE_SIZE}&page=${pageIndex}`
+
+const Index = props => {
+  const { data, error, size, setSize, mutate } = useSWRInfinite(getKey, fetcher)
+  const products = data ? [].concat(...data) : []
+
+  if (!products) {
     return <div>Loading...</div>
   }
 
@@ -16,7 +24,7 @@ const Index = props => {
   return (
     <div>
       {
-        data && data.map(d => <div key={d.id}>{d.name}</div>)
+        products && products.map((p, i) => <div key={p.id || i}>{p.name}</div>)
       }
     </div>
   )
