@@ -24,7 +24,7 @@ handler
 
       res.status(200).json(await products.toArray())
 
-      await req.dbClient.close()
+      // await req.dbClient.close() //TODO figure out best practices for opening/closing db
 
     } catch (error) {
       throw new Error(`Error in getting products: ${error}`)
