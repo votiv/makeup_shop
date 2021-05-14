@@ -1,5 +1,5 @@
-export const bwText = hex => {
-  let r = 0, g = 0, b = 0
+export const bwText: (hex: string) => '#000000' | '#ffffff' = hex => {
+  let r = '0', g = '0', b = '0'
 
   // 3 digits
   if (hex.length === 4) {
@@ -15,7 +15,7 @@ export const bwText = hex => {
   }
 
   // http://stackoverflow.com/a/3943023/112731
-  return (r * 0.299 + g * 0.587 + b * 0.114) > 186
+  return (parseInt(r, 16) * 0.299 + parseInt(g, 16) * 0.587 + parseInt(b, 16) * 0.114) > 186
     ? '#000000'
-    : '#FFFFFF'
+    : '#ffffff'
 }

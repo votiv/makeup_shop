@@ -5,7 +5,7 @@ import { fetcher } from '../utils/fetcher'
 import { bwText } from '../utils/calcTextColor'
 import { Container, Box, Grid } from '../components/layout'
 import ImageFallback from '../components/ImageFallback'
-import { Shimmer } from '../components/Shimmer'
+import { Fallback } from '../components/Fallback'
 import { CardDetails, Card } from '../components/card'
 import { getRandomItem } from '../utils/arrayUtils'
 
@@ -31,20 +31,21 @@ const Index = props => {
   }
 
   return (
-    <Container>
+    <Container as="main">
       <Box width="100%" height="80vh">
-        <Grid minMax="17rem">
+        <Grid minMax="17rem" as="section">
           {
             products.length > 0 && products.map((product, index) => {
-              const bColor = getRandomItem(product.product_colors.map(c => c.hex_value))
+              const bColor = getRandomItem<string>(product.product_colors.map(c => c.hex_value))
 
               return (
                 <Link href="/product/[id]" as={`/product/${product.id}`} key={product.id || index}>
                   <Card backgroundColor={bColor}>
                     <ImageFallback
                       src={product.api_featured_image}
-                      fallbackSrc={Shimmer}
+                      fallbackSrc={Fallback}
                       alt={product.name}
+                      objectFit="cover"
                     />
                     <CardDetails color={bwText(bColor)}>
                       <h3>{product.name}</h3>

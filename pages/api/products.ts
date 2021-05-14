@@ -4,7 +4,7 @@ import { Db, MongoClient } from 'mongodb'
 
 import dbMiddleware from '../../middleware/database'
 
-interface ExtendedRequest {
+export interface ExtendedRequest {
   db: Db
   dbClient: MongoClient
 }
@@ -22,13 +22,25 @@ handler
         .skip(parseInt(page) > 0 ? ((parseInt(page) - 1) * parseInt(perPage)) : 0)
         .limit(parseInt(perPage))
 
-      res.status(200).json(await products.toArray())
+      return res.status(200).json(await products.toArray())
 
       // await req.dbClient.close() //TODO figure out best practices for opening/closing db
 
     } catch (error) {
-      throw new Error(`Error in getting products: ${error}`)
+      throw new Error(`Error in getting /products: ${error}`)
     }
   })
 
 export default handler
+
+export const productHandler = async (req, res) => {
+  try {
+    const collection = req.db.collection('makeup')
+    const products = await collection
+      .find()
+
+    console.log('them products', products)
+  } catch (error) {
+    throw new Error(`Error in getting /products: ${error}`)
+  }
+}

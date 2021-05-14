@@ -1,4 +1,4 @@
-export const getRandomItem = array => array[Math.floor(Math.random() * array.length)]
+export const getRandomItem: <T>(array: Array<T>) => T = array => array[Math.floor(Math.random() * array.length)]
 
 export const addOrRemove = (array, setter) => item => {
   let filtered = [...array]

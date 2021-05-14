@@ -1,5 +1,5 @@
-import Head from 'next/head'
 import { createGlobalStyle } from 'styled-components'
+import Head from 'next/head'
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -25,11 +25,6 @@ const App = ({ Component, pageProps }) => (
       <title>Makeup Shop</title>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-      <link rel="icon" href="/favicon.ico" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" />
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
-            rel="stylesheet" />
     </Head>
 
     <GlobalStyle />

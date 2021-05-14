@@ -12,6 +12,17 @@ const client = new MongoClient(MONGODB_URI, {
   useUnifiedTopology: true
 })
 
+export const openDb = async () => {
+  if (!client.isConnected()) {
+    await client.connect()
+  }
+
+  return {
+    client,
+    db: client.db('makeup_shop')
+  }
+}
+
 const database = async (req, res, next) => {
 
   if (!client.isConnected()) {

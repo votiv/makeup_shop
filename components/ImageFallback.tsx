@@ -1,8 +1,19 @@
-import { forwardRef, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 
-const ImageFallback = forwardRef((props: any, ref) => {
-  const { src, fallbackSrc, ...rest } = props
+type ObjectFit = 'cover' | 'contain' | 'none'
+
+interface ImageFallbackType {
+  src?: string
+  alt?: string
+  fallbackSrc?: string
+  width?: string
+  height?: string
+  objectFit?: ObjectFit
+}
+
+const ImageFallback = (props: ImageFallbackType) => {
+  const { src, fallbackSrc, width, height, objectFit, ...rest } = props
   const [imgSrc, setImgSrc] = useState(false)
   let parsedSrc
 
@@ -25,11 +36,11 @@ const ImageFallback = forwardRef((props: any, ref) => {
       onError={() => {
         setImgSrc(true)
       }}
-      width="235"
-      height="305"
-      objectFit="cover"
+      width={width ? (parseInt(width) * 16).toString() : '235'}
+      height={height ? (parseInt(height) * 16).toString() : '305'}
+      objectFit={objectFit}
     />
   )
-})
+}
 
 export default ImageFallback

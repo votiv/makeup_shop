@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
 const C = styled.div`
-  //max-width: 100%;
+  max-width: 100%;
   margin-right: auto;
   margin-left: auto;
 
-  /*@media (min-width: 576px) {
+  @media (min-width: 576px) {
     max-width: 540px;
   }
 
@@ -23,9 +23,9 @@ const C = styled.div`
 
   @media (min-width: 1400px) {
     max-width: 1320px;
-  }*/
+  }
 `
 
-export const Container = ({ children }) => {
-  return <C>{children}</C>
+export const Container = ({ children, ...rest }) => {
+  return <C {...rest}>{children}</C>
 }
