@@ -7,6 +7,10 @@ import dbMiddleware from '../../middleware/database'
 export interface ExtendedRequest {
   db: Db
   dbClient: MongoClient
+  query: {
+    page: string
+    perPage: string
+  }
 }
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>()
@@ -14,17 +18,15 @@ handler
   .use(dbMiddleware)
   .get<ExtendedRequest>(async (req, res) => {
     try {
-      const { perPage = '20', page = '0' } = req.body
+      const { perPage = '20', page = '0' } = req.query
 
       const collection = req.db.collection('makeup')
       const products = await collection
         .find()
-        .skip(parseInt(page) > 0 ? ((parseInt(page) - 1) * parseInt(perPage)) : 0)
+        .skip(parseInt(page) > 0 ? (parseInt(page) * parseInt(perPage)) : 0)
         .limit(parseInt(perPage))
 
       return res.status(200).json(await products.toArray())
-
-      // await req.dbClient.close() //TODO figure out best practices for opening/closing db
 
     } catch (error) {
       throw new Error(`Error in getting /products: ${error}`)
@@ -32,15 +34,3 @@ handler
   })
 
 export default handler
-
-export const productHandler = async (req, res) => {
-  try {
-    const collection = req.db.collection('makeup')
-    const products = await collection
-      .find()
-
-    console.log('them products', products)
-  } catch (error) {
-    throw new Error(`Error in getting /products: ${error}`)
-  }
-}

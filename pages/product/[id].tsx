@@ -2,6 +2,7 @@ import { FunctionComponent } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Tippy from '@tippyjs/react'
 import styled from 'styled-components'
+import 'tippy.js/dist/tippy.css';
 
 import { openDb } from '../../middleware/database'
 import { getRandomItem } from '../../utils/arrayUtils'
@@ -20,6 +21,7 @@ import { Rating } from '../../components/Rating'
 import { Grid } from '../../components/layout'
 import { Color } from '../../components/Color'
 import { AnchorButton } from '../../components/buttons'
+import { DEFAULT_COLOR } from '../../utils/constants/constants'
 
 export interface ColorType {
   hex_value: string
@@ -55,7 +57,7 @@ const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
 
   const color = product_colors?.length > 0
     ? getRandomItem<ColorType>(product_colors).hex_value
-    : '#db7093'
+    : DEFAULT_COLOR
 
   return (
     <Container as="main">
@@ -65,7 +67,7 @@ const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
 
       <ProductWrapper>
         <ImageWrapper color={color}>
-          <Image src={api_featured_image} alt={name} style={{ flex: '1 1 50%' }} />
+          <Image src={api_featured_image} alt={name} />
         </ImageWrapper>
 
         <DetailsWrapper>
@@ -86,8 +88,8 @@ const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
               <>
                 <Box marginBottom="1rem"><FlexRow width="100%"><Bold>Colors:</Bold></FlexRow></Box>
                 <Grid minMax="2.5rem">
-                  {product_colors.map(color => (
-                    <Tippy content={color.colour_name} key={color.hex_value}>
+                  {product_colors.map((color, index) => (
+                    <Tippy content={color.colour_name} key={index}>
                       <Color color={color.hex_value} />
                     </Tippy>
                   ))}
