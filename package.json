@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tippyjs/react": "^4.2.5",
+    "lodash.debounce": "^4.0.8",
     "mongodb": "^3.6.6",
     "next": "10.2.0",
     "next-connect": "^0.10.1",

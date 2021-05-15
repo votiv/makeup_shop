@@ -15,7 +15,7 @@ interface AnchorButtonType extends StyledAnchorButtonType {
 
 const A = styled(B)<StyledAnchorButtonType>`
   && {
-    background-color: ${({ bwButton, color }) => bwButton ? 'grey' : color};
+    background-color: ${({ bwButton, color }) => bwButton ? 'gray' : color};
     color: ${({ bwButton, color }) => bwButton ? 'black' : bwText(color)};
 
     @media (max-width: 768px) {

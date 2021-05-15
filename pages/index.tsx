@@ -8,85 +8,115 @@ import ImageFallback from '../components/ImageFallback'
 import { Fallback } from '../components/Fallback'
 import { Card, CardDetails } from '../components/card'
 import { getRandomItem } from '../utils/arrayUtils'
-import { DEFAULT_COLOR, PAGE_SIZE } from '../utils/constants/constants'
+import { DEFAULT_COLOR, MAIN_BLUE_COLOR, PAGE_SIZE } from '../utils/constants/constants'
 import { Button } from '../components/buttons'
 import Spinner from '../components/Spinner'
 import { Typography } from '../components/typography'
+import { FilterHeader } from '../components/filter'
+import { useEffect, useReducer } from 'react'
+import { SearchActionKind, SearchActionType, SearchStateType } from '../components/filter/interface'
 
 const getKey = (pageIndex, previousPageData) =>
   (previousPageData && !previousPageData.length)
     ? null
     : `/api/products?perPage=${PAGE_SIZE}&page=${pageIndex}`
 
+const searchReducer = (state: SearchStateType, action: SearchActionType) => {
+  switch (action.type) {
+    case SearchActionKind.Search:
+      return action.payload
+    default:
+      return state
+  }
+}
 
 const Index = () => {
-  const { data, error, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, fetcher)
+  const { data, error, size, setSize, mutate } = useSWRInfinite(getKey, fetcher)
   const products = data ? [].concat(...data) : []
 
   const isLoadingInitialData = !data && !error
   const isLoadingMore =
-    isLoadingInitialData ||
+    !isLoadingInitialData &&
     (size > 0 && data && typeof data[size - 1] === 'undefined')
-  const isEmpty = data?.[0]?.length === 0
+  const isEmpty = data?.length === 0 || data?.[0]?.length === 0
   const isReachingEnd =
-    isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE)
-  const isRefreshing = isValidating && data && data.length === size
+    !!isEmpty || data?.length < PAGE_SIZE || (data && data[data.length - 1]?.length < PAGE_SIZE)
+
+  const [search, dispatchSearch] = useReducer(searchReducer, '')
+  useEffect(() => {
+    fetcher(`/api/products?search=${search}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => mutate(res, false))
+  }, [search])
 
   if (!products) {
-    return <AbsoluteCentered><Spinner color="#426696" /></AbsoluteCentered>
+    return <AbsoluteCentered><Spinner color={MAIN_BLUE_COLOR} /></AbsoluteCentered>
   }
 
   if (error) {
-    return <div>{error}</div>
+    return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
   }
 
   return (
     <Container as="main">
+
+      <FilterHeader doSearch={dispatchSearch} />
+
       <Box width="100%" height="80vh">
         <>
           <Grid minMax="17rem" as="section">
             {
-              products.length > 0 && products.map((product, index) => {
-                const bColor = getRandomItem<string>(product.product_colors.map(c => c.hex_value))
+              products.length > 0 ?
+                products.map((product, index) => {
+                  const bColor = getRandomItem<string>(product.product_colors.map(c => c.hex_value))
 
-                return (
-                  <Link
-                    href="/product/[id]"
-                    as={`/product/${product.id}`}
-                    key={product.id || index}
-                  >
-                    <Card backgroundColor={bColor || DEFAULT_COLOR}>
-                      <ImageFallback
-                        src={product.api_featured_image}
-                        fallbackSrc={Fallback}
-                        alt={product.name}
-                        objectFit="cover"
-                      />
-                      <CardDetails color={bwText(bColor || DEFAULT_COLOR)}>
-                        <h3>{product.name}</h3>
-                        <p>Price: {`${product.price_sign} ${product.price}`}</p>
-                      </CardDetails>
-                    </Card>
-                  </Link>
-                )
-              })
+                  return (
+                    <Link
+                      href="/product/[id]"
+                      as={`/product/${product.id}`}
+                      key={product.id || index}
+                    >
+                      <Card backgroundColor={bColor || DEFAULT_COLOR}>
+                        <ImageFallback
+                          src={product.api_featured_image}
+                          fallbackSrc={Fallback}
+                          alt={product.name}
+                          objectFit="cover"
+                        />
+                        <CardDetails color={bwText(bColor || DEFAULT_COLOR)}>
+                          <Typography variant="h3">{product.name}</Typography>
+                          <Typography variant="p">Price: {`${product.price_sign || '$'} ${product.price}`}</Typography>
+                        </CardDetails>
+                      </Card>
+                    </Link>
+                  )
+                })
+                : <Typography variant="p" align="center">No products to show</Typography>
             }
           </Grid>
 
-          <Box margin="2rem 0">
-            <FlexRowCentered>
-              {isLoadingMore
-                ? <Spinner color="#426696" />
-                : isReachingEnd
-                  ? <Typography variant="p" align="center">No more products</Typography>
-                  : <Button
-                    disabled={isLoadingMore || isReachingEnd}
-                    onClick={() => setSize(size + 1)}
-                  >
-                    load more
-                  </Button>}
-            </FlexRowCentered>
-          </Box>
+          {
+            products.length > 0 && (
+              <Box margin="2rem 0">
+                <FlexRowCentered>
+                  {isLoadingMore
+                    ? <Spinner color={MAIN_BLUE_COLOR} />
+                    : isReachingEnd
+                      ? null
+                      : <Button
+                        disabled={isLoadingMore || isReachingEnd}
+                        onClick={() => setSize(size + 1)}
+                      >
+                        load more
+                      </Button>}
+                </FlexRowCentered>
+              </Box>
+            )
+          }
 
         </>
       </Box>

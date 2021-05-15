@@ -10,6 +10,7 @@ export interface ExtendedRequest {
   query: {
     page: string
     perPage: string
+    search: string
   }
 }
 
@@ -18,18 +19,23 @@ handler
   .use(dbMiddleware)
   .get<ExtendedRequest>(async (req, res) => {
     try {
-      const { perPage = '20', page = '0' } = req.query
+      const { perPage = '20', page = '0', search = '' } = req.query
 
       const collection = req.db.collection('makeup')
-      const products = await collection
-        .find()
+      const filtered = !!search
+        ? await collection
+          .find({ $text: { $search: search, $caseSensitive: false } })
+        : await collection
+          .find()
+
+      const products = await filtered
         .skip(parseInt(page) > 0 ? (parseInt(page) * parseInt(perPage)) : 0)
         .limit(parseInt(perPage))
 
       return res.status(200).json(await products.toArray())
 
     } catch (error) {
-      throw new Error(`Error in getting /products: ${error}`)
+      res.status(error.code).send(`Error in getting /products: ${error}`)
     }
   })
 
