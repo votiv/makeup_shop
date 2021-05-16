@@ -8,7 +8,6 @@ export const Card = styled(FlexColumnCentered)<CardType>`
   border-radius: .5rem;
   padding: 1.5rem 1.5rem .5rem;
   cursor: pointer;
-  max-width: 17.5rem;
   
   @media (max-width: 992px) {
     max-width: unset;

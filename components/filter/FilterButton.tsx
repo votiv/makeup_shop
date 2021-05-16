@@ -32,19 +32,20 @@ const FB = styled.button<FBType>`
     transition: fill .5s ease;
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 600px) {
     padding: .25rem !important;
+    margin-top: 1rem;
   }
 `
 
 const HidingFilter = styled(Typography)`
-  @media (max-width: 560px) {
+  @media (max-width: 600px) {
     display: none;
   }
 `
 
 const FilterInner = styled(FlexRowSpaceBetween)`
-  @media (max-width: 560px) {
+  @media (max-width: 600px) {
     width: auto;
   }
 `

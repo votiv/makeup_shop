@@ -35,7 +35,7 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
     <FS isOpen={isOpen}>
       <FilterWrapper isOpen={isOpen}>
         <FlexColumn>
-          <label htmlFor="search">Search</label>
+          <Label htmlFor="search">Search</Label>
           <Box height="2rem" padding=".5rem">
             <Input
               ref={input}
@@ -47,14 +47,12 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
             />
           </Box>
         </FlexColumn>
-        <Box height="2rem" marginLeft="4rem" padding=".5rem" marginTop="1.5rem" border-radius=".25rem">
-          <Button
-            onClick={clearFilter}
-            color={MAIN_BLUE_COLOR}
-          >
-            Clear filters
-          </Button>
-        </Box>
+        <ClearButton
+          onClick={clearFilter}
+          color={MAIN_BLUE_COLOR}
+        >
+          Clear filters
+        </ClearButton>
       </FilterWrapper>
     </FS>
   )
@@ -72,7 +70,14 @@ const FilterWrapper = styled(FlexRow)<FBType>`
   align-items: center;
   opacity: ${({ isOpen }) => isOpen ? '1' : '0'};
   transition: opacity .25s ease;
-  padding: 2rem;
+  padding: 0 2rem 2rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    padding: 0 3rem 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `
 
 const Input = styled.input`
@@ -95,5 +100,24 @@ const Input = styled.input`
     border: 1px solid ${MAIN_BLUE_COLOR};
     background-color: #fff;
     box-shadow: 0 0 0 4px rgba(66, 102, 150, .1);
+  }
+`
+
+const ClearButton = styled(Button)`
+  height: 2rem;
+  margin-left: 4rem;
+  margin-top: 1.5rem;
+  padding: .5rem;
+  border-radius: .25rem;
+
+  @media (max-width: 600px) {
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+`
+
+const Label = styled.label`
+  @media (max-width: 600px) {
+    text-align: center;
   }
 `
