@@ -5,14 +5,15 @@ import { Box, FlexRowSpaceBetween } from '../layout'
 import { FilterIcon } from '../icons'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
 import { FBType, FilterButtonType } from './types'
+import { Typography } from '../typography'
 
 export const FilterButton: FunctionComponent<FilterButtonType> = ({ isOpen, onClick, ...rest }) => (
   <Box padding=".25rem 1rem">
     <FB {...rest} isOpen={isOpen} onClick={onClick}>
-      <FlexRowSpaceBetween width="5rem">
+      <FilterInner width="5rem">
         <FilterIcon isOpen={isOpen} />
-        Filter
-      </FlexRowSpaceBetween>
+        <HidingFilter variant="p" align="center">Filter</HidingFilter>
+      </FilterInner>
     </FB>
   </Box>
 )
@@ -29,5 +30,21 @@ const FB = styled.button<FBType>`
 
   svg {
     transition: fill .5s ease;
+  }
+
+  @media (max-width: 560px) {
+    padding: .25rem !important;
+  }
+`
+
+const HidingFilter = styled(Typography)`
+  @media (max-width: 560px) {
+    display: none;
+  }
+`
+
+const FilterInner = styled(FlexRowSpaceBetween)`
+  @media (max-width: 560px) {
+    width: auto;
   }
 `

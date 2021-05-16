@@ -1,12 +1,15 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 
 import { Box, FlexColumn, FlexRow } from '../layout'
 import { FBType, SearchActionKind, SearchType } from './types'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
+import { Button } from '../buttons'
 
 export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, doSearch }) => {
+  const input = useRef(null)
+
   const onInputChange = debounce(
     event => doSearch({ type: SearchActionKind.Search, payload: event.target.value }),
     300
@@ -21,6 +24,13 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
     300
   )
 
+  const clearFilter = useCallback(() => {
+    doSearch({ type: SearchActionKind.Search, payload: '' })
+    if (input.current) {
+      input.current.value = ''
+    }
+  }, [])
+
   return (
     <FS isOpen={isOpen}>
       <FilterWrapper isOpen={isOpen}>
@@ -28,6 +38,7 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
           <label htmlFor="search">Search</label>
           <Box height="2rem" padding=".5rem">
             <Input
+              ref={input}
               name="search"
               onChange={onInputChange}
               onKeyUp={onKeyUp}
@@ -36,6 +47,14 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
             />
           </Box>
         </FlexColumn>
+        <Box height="2rem" marginLeft="4rem" padding=".5rem" marginTop="1.5rem" border-radius=".25rem">
+          <Button
+            onClick={clearFilter}
+            color={MAIN_BLUE_COLOR}
+          >
+            Clear filters
+          </Button>
+        </Box>
       </FilterWrapper>
     </FS>
   )
