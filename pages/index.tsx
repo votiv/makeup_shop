@@ -1,5 +1,6 @@
 import { useSWRInfinite } from 'swr'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { fetcher } from '../utils/fetcher'
 import { bwText } from '../utils/calcTextColor'
@@ -13,13 +14,10 @@ import { Button } from '../components/buttons'
 import Spinner from '../components/Spinner'
 import { Typography } from '../components/typography'
 import { FilterHeader } from '../components/filter'
-import { useEffect, useReducer } from 'react'
+import { useCallback, useEffect, useReducer } from 'react'
 import { SearchActionKind, SearchActionType, SearchStateType } from '../components/filter/interface'
-
-const getKey = (pageIndex, previousPageData) =>
-  (previousPageData && !previousPageData.length)
-    ? null
-    : `/api/products?perPage=${PAGE_SIZE}&page=${pageIndex}`
+import { GetStaticProps } from 'next'
+import { openDb } from '../middleware/database'
 
 const searchReducer = (state: SearchStateType, action: SearchActionType) => {
   switch (action.type) {
@@ -31,7 +29,17 @@ const searchReducer = (state: SearchStateType, action: SearchActionType) => {
 }
 
 const Index = () => {
-  const { data, error, size, setSize, mutate } = useSWRInfinite(getKey, fetcher)
+  const router = useRouter()
+
+  const [search, dispatchSearch] = useReducer(searchReducer, '')
+
+  const { data, error, size, setSize, mutate } = useSWRInfinite(
+    (pageIndex, previousPageData) =>
+      (previousPageData && !previousPageData.length)
+        ? null
+        : `/api/products?perPage=${PAGE_SIZE}&page=${pageIndex}&search=${search}`,
+    fetcher
+  )
   const products = data ? [].concat(...data) : []
 
   const isLoadingInitialData = !data && !error
@@ -40,9 +48,8 @@ const Index = () => {
     (size > 0 && data && typeof data[size - 1] === 'undefined')
   const isEmpty = data?.length === 0 || data?.[0]?.length === 0
   const isReachingEnd =
-    !!isEmpty || data?.length < PAGE_SIZE || (data && data[data.length - 1]?.length < PAGE_SIZE)
+    !!isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE)
 
-  const [search, dispatchSearch] = useReducer(searchReducer, '')
   useEffect(() => {
     fetcher(`/api/products?search=${search}`, {
       headers: {
@@ -61,6 +68,33 @@ const Index = () => {
     return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
   }
 
+  const handleCardKeyNav = id => event => {
+    if (event.key === 'Enter') {
+      router.push(`/product/${id}`)
+    }
+  }
+
+  const mapProducts = useCallback((product, index) => (
+    <Link
+      href="/product/[id]"
+      as={`/product/${product.id}`}
+      key={product.id || index}
+    >
+      <Card backgroundColor={product.bColor || DEFAULT_COLOR} tabIndex={0} onKeyUp={handleCardKeyNav(product.id)}>
+        <ImageFallback
+          src={product.api_featured_image}
+          fallbackSrc={Fallback}
+          alt={product.name}
+          objectFit="cover"
+        />
+        <CardDetails color={bwText(product.bColor || DEFAULT_COLOR)}>
+          <Typography variant="h3">{product.name}</Typography>
+          <Typography variant="p">Price: {`${product.price_sign || '$'} ${product.price}`}</Typography>
+        </CardDetails>
+      </Card>
+    </Link>
+  ), [products])
+
   return (
     <Container as="main">
 
@@ -70,32 +104,9 @@ const Index = () => {
         <>
           <Grid minMax="17rem" as="section">
             {
-              products.length > 0 ?
-                products.map((product, index) => {
-                  const bColor = getRandomItem<string>(product.product_colors.map(c => c.hex_value))
-
-                  return (
-                    <Link
-                      href="/product/[id]"
-                      as={`/product/${product.id}`}
-                      key={product.id || index}
-                    >
-                      <Card backgroundColor={bColor || DEFAULT_COLOR}>
-                        <ImageFallback
-                          src={product.api_featured_image}
-                          fallbackSrc={Fallback}
-                          alt={product.name}
-                          objectFit="cover"
-                        />
-                        <CardDetails color={bwText(bColor || DEFAULT_COLOR)}>
-                          <Typography variant="h3">{product.name}</Typography>
-                          <Typography variant="p">Price: {`${product.price_sign || '$'} ${product.price}`}</Typography>
-                        </CardDetails>
-                      </Card>
-                    </Link>
-                  )
-                })
-                : <Typography variant="p" align="center">No products to show</Typography>
+              products.length > 0
+                ? products.map(mapProducts)
+                : !isLoadingInitialData && <Typography variant="p" align="center">No products to show</Typography>
             }
           </Grid>
 
@@ -106,12 +117,14 @@ const Index = () => {
                   {isLoadingMore
                     ? <Spinner color={MAIN_BLUE_COLOR} />
                     : isReachingEnd
-                      ? null
+                      ? <Typography variant="p" align="center">No products to show</Typography>
                       : <Button
                         disabled={isLoadingMore || isReachingEnd}
                         onClick={() => setSize(size + 1)}
+                        color={MAIN_BLUE_COLOR}
+                        style={{ borderRadius: '.33rem' }}
                       >
-                        load more
+                        Load more
                       </Button>}
                 </FlexRowCentered>
               </Box>

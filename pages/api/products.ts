@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Db, MongoClient } from 'mongodb'
 
 import dbMiddleware from '../../middleware/database'
+import { getRandomItem } from '../../utils/arrayUtils'
 
 export interface ExtendedRequest {
   db: Db
@@ -32,7 +33,12 @@ handler
         .skip(parseInt(page) > 0 ? (parseInt(page) * parseInt(perPage)) : 0)
         .limit(parseInt(perPage))
 
-      return res.status(200).json(await products.toArray())
+      const withBColor = products.map(p => ({
+        ...p,
+        bColor: getRandomItem<string>(p.product_colors.map(c => c.hex_value))
+      }))
+
+      return res.status(200).json(await withBColor.toArray())
 
     } catch (error) {
       res.status(error.code).send(`Error in getting /products: ${error}`)

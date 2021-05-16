@@ -25,9 +25,9 @@ export const FilterButton: FunctionComponent<FilterButtonType> = ({ isOpen, onCl
 )
 
 const FB = styled.button<FBType>`
-  border: 1px solid ${({ isOpen }) => isOpen ? 'gray' : MAIN_BLUE_COLOR};
+  border: 1px solid ${({ isOpen }) => isOpen ? 'grey' : MAIN_BLUE_COLOR};
   border-radius: .25rem;
-  color: ${({ isOpen }) => isOpen ? 'gray' : MAIN_BLUE_COLOR};
+  color: ${({ isOpen }) => isOpen ? 'grey' : MAIN_BLUE_COLOR};
   outline: none;
   font-weight: bold;
   background-color: transparent;

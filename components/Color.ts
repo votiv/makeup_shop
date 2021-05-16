@@ -4,7 +4,7 @@ const ColorTooltip = styled.p`
   visibility: hidden;
   position: absolute;
   display: flex;
-  background-color: lightgray;
+  background-color: lightgrey;
   left: 1rem;
   z-index: 2;
   top: 0.5rem;

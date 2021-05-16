@@ -13,6 +13,6 @@ export const B = styled.button<StyledButtonType>`
   font-weight: bold;
   min-width: 6rem;
   cursor: pointer;
-  background-color: ${({ color }) => color ? color : 'gray'};
+  background-color: ${({ color }) => color ? color : 'grey'};
   color: ${({ color }) => color ? bwText(color) : 'black'};
 `
