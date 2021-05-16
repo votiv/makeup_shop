@@ -64,7 +64,6 @@ const Index: FunctionComponent<IndexType> = props => {
   }
 
   if (error) {
-    console.log('trigger deploy')
     return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
   }
 
