@@ -3,15 +3,8 @@ import styled from 'styled-components'
 import Link from 'next/link'
 
 import { bwText } from '../../utils/calcTextColor'
-import { B, StyledButtonType } from './StyledButton'
-
-interface StyledAnchorButtonType extends StyledButtonType {
-  bwButton?: boolean
-}
-
-interface AnchorButtonType extends StyledAnchorButtonType {
-  url: string
-}
+import { B } from './StyledButton'
+import { AnchorButtonType, StyledAnchorButtonType } from './types'
 
 const A = styled(B)<StyledAnchorButtonType>`
   && {

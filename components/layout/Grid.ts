@@ -1,10 +1,6 @@
 import styled from 'styled-components'
 
-interface GridType {
-  minMax?: string
-  width?: string
-  gridGap?: string
-}
+import { GridType } from './types'
 
 export const Grid = styled.div<GridType>`
   display: grid;

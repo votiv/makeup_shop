@@ -4,14 +4,7 @@ import { FunctionComponent } from 'react'
 import { Box, FlexRowSpaceBetween } from '../layout'
 import { FilterIcon } from '../icons'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
-
-export interface FBType {
-  isOpen: boolean
-}
-
-interface FilterButtonType extends FBType {
-  onClick: () => void
-}
+import { FBType, FilterButtonType } from './types'
 
 export const FilterButton: FunctionComponent<FilterButtonType> = ({ isOpen, onClick, ...rest }) => (
   <Box padding=".25rem 1rem">

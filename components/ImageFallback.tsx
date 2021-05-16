@@ -1,16 +1,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
-type ObjectFit = 'cover' | 'contain' | 'none'
-
-interface ImageFallbackType {
-  src?: string
-  alt?: string
-  fallbackSrc?: string
-  width?: string
-  height?: string
-  objectFit?: ObjectFit
-}
+import { ImageFallbackType } from './types'
 
 const ImageFallback = (props: ImageFallbackType) => {
   const { src, fallbackSrc, width, height, objectFit, ...rest } = props

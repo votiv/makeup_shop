@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react'
 
-import { FBType } from '../filter/FilterButton'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
+import { FBType } from '../filter/types'
 
 export const FilterIcon: FunctionComponent<FBType> = ({ isOpen }) => (
   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"

@@ -1,11 +1,9 @@
-import { FunctionComponent, memo, useRef } from 'react'
+import { FunctionComponent } from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 
-import { FBType } from './FilterButton'
-import { SearchType } from './FilterHeader'
 import { Box, FlexColumn, FlexRow } from '../layout'
-import { SearchActionKind } from './interface'
+import { FBType, SearchActionKind, SearchType } from './types'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
 
 export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, doSearch }) => {

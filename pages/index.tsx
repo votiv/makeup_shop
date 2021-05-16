@@ -15,9 +15,11 @@ import Spinner from '../components/Spinner'
 import { Typography } from '../components/typography'
 import { FilterHeader } from '../components/filter'
 import { FunctionComponent, useCallback, useEffect, useReducer } from 'react'
-import { SearchActionKind, SearchActionType, SearchStateType } from '../components/filter/interface'
+import { SearchActionKind, SearchActionType, SearchStateType } from '../components/filter/types'
 import { GetStaticProps } from 'next'
 import { openDb } from '../middleware/database'
+import { Collection } from 'mongodb'
+import { IndexType, ProductType } from '../types/types'
 
 const searchReducer = (state: SearchStateType, action: SearchActionType) => {
   switch (action.type) {
@@ -28,12 +30,10 @@ const searchReducer = (state: SearchStateType, action: SearchActionType) => {
   }
 }
 
-const Index: FunctionComponent<any> = props => {
+const Index: FunctionComponent<IndexType> = props => {
   const router = useRouter()
 
-  const [search, dispatchSearch] = useReducer(searchReducer, '')
-
-  const { data, error, size, setSize, mutate } = useSWRInfinite(
+  const { data, error, size, setSize, mutate } = useSWRInfinite<Array<ProductType>, Error>(
     (pageIndex, previousPageData) =>
       (previousPageData && !previousPageData.length)
         ? null
@@ -41,13 +41,14 @@ const Index: FunctionComponent<any> = props => {
     fetcher,
     { initialData: props.products }
   )
-  const products = data ? [].concat(...data) : []
+  const products = data ? new Array<ProductType>().concat(...data) : []
 
   const isLoadingInitialData = !data && !error
   const isLoadingMore = !isLoadingInitialData && (size > 0 && data && typeof data[size - 1] === 'undefined')
   const isEmpty = data?.length === 0 || data?.[0]?.length === 0
   const isReachingEnd = !!isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE)
 
+  const [search, dispatchSearch] = useReducer(searchReducer, '')
   useEffect(() => {
     fetcher(`/api/products?search=${search}`, {
       headers: {
@@ -139,7 +140,7 @@ export default Index
 
 export const getStaticProps: GetStaticProps = async () => {
   const { db } = await openDb()
-  const collection = await db.collection('makeup')
+  const collection: Collection<ProductType> = await db.collection('makeup')
   const products = await collection.find().limit(PAGE_SIZE)
 
   if (!products) {

@@ -1,8 +1,6 @@
 import { FunctionComponent } from 'react'
 
-interface RatingType {
-  rating: string | null
-}
+import { RatingType } from './types'
 
 export const Rating: FunctionComponent<RatingType> = ({ rating, ...rest }) => <p {...rest}>Rating: {
   rating ? rating : 'unrated'

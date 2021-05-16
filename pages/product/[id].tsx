@@ -3,6 +3,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Tippy from '@tippyjs/react'
 import styled from 'styled-components'
 import 'tippy.js/dist/tippy.css';
+import { Collection } from 'mongodb'
 
 import { openDb } from '../../middleware/database'
 import { getRandomItem } from '../../utils/arrayUtils'
@@ -22,24 +23,9 @@ import { Grid } from '../../components/layout'
 import { Color } from '../../components/Color'
 import { AnchorButton } from '../../components/buttons'
 import { DEFAULT_COLOR } from '../../utils/constants/constants'
+import { ColorType, ProductType } from '../../types/types'
 
-export interface ColorType {
-  hex_value: string
-  colour_name: string
-}
 
-interface ProductType {
-  product_colors: ColorType[]
-  name: string
-  price: string
-  price_sign: string
-  rating: string
-  description: string
-  tag_list: string[]
-  product_link: string
-  api_featured_image: string
-  brand: string
-}
 
 const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
   const {
@@ -145,7 +131,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params
   const { db } = await openDb()
-  const collection = await db.collection('makeup')
+  const collection: Collection<ProductType> = await db.collection('makeup')
   const product = await collection.find({ id: parseInt(id as string) })
   const found = await product.next()
 

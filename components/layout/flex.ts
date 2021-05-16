@@ -1,8 +1,6 @@
 import styled from 'styled-components'
 
-interface FlexRowType {
-  width?: string
-}
+import { FlexRowType } from './types'
 
 export const FlexColumn = styled.div`
   display: flex;

@@ -1,10 +1,7 @@
 import styled from 'styled-components'
 
 import { FlexColumnCentered } from '../layout'
-
-interface CardType {
-  backgroundColor?: string
-}
+import { CardType } from './types'
 
 export const Card = styled(FlexColumnCentered)<CardType>`
   background-color: ${({ backgroundColor }) => (backgroundColor || 'white')};

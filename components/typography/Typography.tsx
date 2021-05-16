@@ -1,15 +1,7 @@
 import styled from 'styled-components'
 import { FunctionComponent } from 'react'
 
-interface StyledTypographyType {
-  borderColor?: string
-  align?: 'center' | 'left' | 'right' | 'justify'
-  color?: string
-}
-
-interface TypographyType extends StyledTypographyType {
-  variant: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'
-}
+import { StyledTypographyType, TypographyType } from './types'
 
 const T = styled.div<StyledTypographyType>`
   border-bottom: ${({ borderColor }) => borderColor ? `3px solid ${borderColor}` : 'none'};

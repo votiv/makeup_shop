@@ -1,19 +1,10 @@
 import nextConnect from 'next-connect'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Db, MongoClient } from 'mongodb'
+import { Collection } from 'mongodb'
 
 import dbMiddleware from '../../middleware/database'
 import { getRandomItem } from '../../utils/arrayUtils'
-
-export interface ExtendedRequest {
-  db: Db
-  dbClient: MongoClient
-  query: {
-    page: string
-    perPage: string
-    search: string
-  }
-}
+import { ExtendedRequest, ProductType } from '../../types/types'
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>()
 handler
@@ -22,7 +13,7 @@ handler
     try {
       const { perPage = '20', page = '0', search = '' } = req.query
 
-      const collection = req.db.collection('makeup')
+      const collection: Collection<ProductType> = req.db.collection('makeup')
       const filtered = !!search
         ? await collection
           .find({ $text: { $search: search, $caseSensitive: false } })

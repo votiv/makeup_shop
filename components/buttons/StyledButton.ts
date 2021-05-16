@@ -1,12 +1,9 @@
 import styled from 'styled-components'
 
 import { bwText } from '../../utils/calcTextColor'
+import { CssColorType } from '../types'
 
-export interface StyledButtonType {
-  color?: string
-}
-
-export const B = styled.button<StyledButtonType>`
+export const B = styled.button<CssColorType>`
   padding: 1rem;
   border: none;
   outline: none;

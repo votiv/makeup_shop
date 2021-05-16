@@ -1,10 +1,8 @@
 import styled from 'styled-components'
 
-interface ImageWrapperType {
-  color?: string
-}
+import { CssColorType } from '../types'
 
-export const ImageWrapper = styled.div<ImageWrapperType>`
+export const ImageWrapper = styled.div<CssColorType>`
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,16 +1,12 @@
-import { Dispatch, FunctionComponent, memo, useCallback, useState } from 'react'
+import { FunctionComponent, memo, useCallback, useState } from 'react'
 
 import { Typography } from '../typography'
 import { Box } from '../layout'
 import { FlexRowSpaceBetween } from '../layout'
 import { FilterButton } from './FilterButton'
 import { FilterSection } from './FilterSection'
-import { SearchActionType } from './interface'
+import { SearchType } from './types'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
-
-export interface SearchType {
-  doSearch: Dispatch<SearchActionType>
-}
 
 export const FilterHeader: FunctionComponent<SearchType> = memo(({ doSearch }) => {
   const [isOpen, setOpen] = useState(false)
