@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, useCallback, useState } from 'react'
+import { Dispatch, FunctionComponent, memo, useCallback, useState } from 'react'
 
 import { Typography } from '../typography'
 import { Box } from '../layout'
@@ -12,10 +12,10 @@ export interface SearchType {
   doSearch: Dispatch<SearchActionType>
 }
 
-export const FilterHeader:FunctionComponent<SearchType> = ({ doSearch }) => {
+export const FilterHeader: FunctionComponent<SearchType> = memo(({ doSearch }) => {
   const [isOpen, setOpen] = useState(false)
 
-  const toggleFilters = useCallback(() => setOpen((prevState => !prevState)), [isOpen, setOpen])
+  const toggleFilters = useCallback(() => setOpen((prevState => !prevState)), [])
 
   return (
     <>
@@ -28,4 +28,4 @@ export const FilterHeader:FunctionComponent<SearchType> = ({ doSearch }) => {
       <FilterSection isOpen={isOpen} doSearch={doSearch} />
     </>
   )
-}
+})

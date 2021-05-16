@@ -14,7 +14,7 @@ import { Button } from '../components/buttons'
 import Spinner from '../components/Spinner'
 import { Typography } from '../components/typography'
 import { FilterHeader } from '../components/filter'
-import { useCallback, useEffect, useReducer } from 'react'
+import { FunctionComponent, useCallback, useEffect, useReducer } from 'react'
 import { SearchActionKind, SearchActionType, SearchStateType } from '../components/filter/interface'
 import { GetStaticProps } from 'next'
 import { openDb } from '../middleware/database'
@@ -28,7 +28,7 @@ const searchReducer = (state: SearchStateType, action: SearchActionType) => {
   }
 }
 
-const Index = () => {
+const Index: FunctionComponent<any> = props => {
   const router = useRouter()
 
   const [search, dispatchSearch] = useReducer(searchReducer, '')
@@ -38,17 +38,15 @@ const Index = () => {
       (previousPageData && !previousPageData.length)
         ? null
         : `/api/products?perPage=${PAGE_SIZE}&page=${pageIndex}&search=${search}`,
-    fetcher
+    fetcher,
+    { initialData: props.products }
   )
   const products = data ? [].concat(...data) : []
 
   const isLoadingInitialData = !data && !error
-  const isLoadingMore =
-    !isLoadingInitialData &&
-    (size > 0 && data && typeof data[size - 1] === 'undefined')
+  const isLoadingMore = !isLoadingInitialData && (size > 0 && data && typeof data[size - 1] === 'undefined')
   const isEmpty = data?.length === 0 || data?.[0]?.length === 0
-  const isReachingEnd =
-    !!isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE)
+  const isReachingEnd = !!isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE)
 
   useEffect(() => {
     fetcher(`/api/products?search=${search}`, {
@@ -68,11 +66,11 @@ const Index = () => {
     return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
   }
 
-  const handleCardKeyNav = id => event => {
+  const handleCardKeyNav = useCallback(id => event => {
     if (event.key === 'Enter') {
       router.push(`/product/${id}`)
     }
-  }
+  }, [])
 
   const mapProducts = useCallback((product, index) => (
     <Link
@@ -138,3 +136,22 @@ const Index = () => {
 }
 
 export default Index
+
+export const getStaticProps: GetStaticProps = async () => {
+  const { db } = await openDb()
+  const collection = await db.collection('makeup')
+  const products = await collection.find().limit(PAGE_SIZE)
+
+  if (!products) {
+    return {
+      notFound: true
+    }
+  }
+
+  const withBColor = products.map(p => ({
+    ...p,
+    bColor: getRandomItem<string>(p.product_colors.map(c => c.hex_value))
+  }))
+
+  return { props: { products: JSON.parse(JSON.stringify(await withBColor.toArray())) } }
+}
