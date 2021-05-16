@@ -2,6 +2,6 @@
   "name": "makeup-shop",
   "version": 2,
   "env": {
-    "MONGODB_URI": "@my-mongodb-uri"
+    "MONGODB_URI": "mongodb+srv://votiv:Votiv123@votivcluster0.zyljp.mongodb.net/makeup_shop"
   }
 }
