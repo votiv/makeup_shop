@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Collection } from 'mongodb'
 
 import dbMiddleware from '../../middleware/database'
-import { getRandomItem } from '../../utils/arrayUtils'
 import { ExtendedRequest, ProductType } from '../../types/types'
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>()
@@ -26,7 +25,7 @@ handler
 
       const withBColor = products.map(p => ({
         ...p,
-        bColor: getRandomItem<string>(p.product_colors.map(c => c.hex_value))
+        bColor: p.product_colors[0]?.hex_value
       }))
 
       return res.status(200).json(await withBColor.toArray())

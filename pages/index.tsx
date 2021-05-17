@@ -8,7 +8,6 @@ import { Box, Container, Grid, FlexRowCentered, AbsoluteCentered } from '../comp
 import ImageFallback from '../components/ImageFallback'
 import { Fallback } from '../components/Fallback'
 import { Card, CardDetails } from '../components/card'
-import { getRandomItem } from '../utils/arrayUtils'
 import { DEFAULT_COLOR, MAIN_BLUE_COLOR, PAGE_SIZE } from '../utils/constants/constants'
 import { Button } from '../components/buttons'
 import Spinner from '../components/Spinner'
@@ -64,7 +63,6 @@ const Index: FunctionComponent<IndexType> = props => {
   }
 
   if (error) {
-    console.log('trigger deploy')
     return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
   }
 
@@ -152,7 +150,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const withBColor = products.map(p => ({
     ...p,
-    bColor: getRandomItem<string>(p.product_colors.map(c => c.hex_value))
+    bColor: p.product_colors[0]?.hex_value
   }))
 
   return { props: { products: JSON.parse(JSON.stringify(await withBColor.toArray())) } }
