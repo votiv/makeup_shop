@@ -12,6 +12,9 @@ const client = new MongoClient(MONGODB_URI, {
   useUnifiedTopology: true
 })
 
+/**
+ * DB connection for SSG
+ */
 export const openDb = async () => {
   if (!client.isConnected()) {
     await client.connect()
@@ -23,6 +26,12 @@ export const openDb = async () => {
   }
 }
 
+/**
+ * Middleware adding DB connection to calls
+ * @param req
+ * @param res
+ * @param next
+ */
 const database = async (req, res, next) => {
 
   if (!client.isConnected()) {

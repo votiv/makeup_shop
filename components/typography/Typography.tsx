@@ -10,6 +10,11 @@ const T = styled.div<StyledTypographyType>`
   color: ${({ color }) => color};
 `
 
+/**
+ * Typography
+ * @param props
+ * @constructor
+ */
 export const Typography: FunctionComponent<TypographyType> = props => {
   const { variant, borderColor, align = 'left', color, children, ...rest } = props
 

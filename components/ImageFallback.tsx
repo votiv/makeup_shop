@@ -3,6 +3,10 @@ import Image from 'next/image'
 
 import { ImageFallbackType } from './types'
 
+/**
+ * ImageFallback, for lazy loading images
+ * @param props
+ */
 const ImageFallback = (props: ImageFallbackType) => {
   const { src, fallbackSrc, width, height, objectFit, ...rest } = props
   const [imgSrc, setImgSrc] = useState(false)

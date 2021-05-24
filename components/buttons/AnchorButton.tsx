@@ -17,6 +17,12 @@ const A = styled(B)<StyledAnchorButtonType>`
   }
 `
 
+/**
+ * Styles anchors like buttons
+ * @param url
+ * @param children
+ * @param rest
+ */
 export const AnchorButton: FunctionComponent<AnchorButtonType> = ({ url, children, ...rest }) => {
   const reg = new RegExp('^(http|https)://')
 

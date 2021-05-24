@@ -9,6 +9,9 @@ import { SearchType } from './types'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
 import styled from 'styled-components'
 
+/**
+ * FilterHeader
+ */
 export const FilterHeader: FunctionComponent<SearchType> = memo(({ doSearch }) => {
   const [isOpen, setOpen] = useState(false)
 

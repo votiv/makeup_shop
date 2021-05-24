@@ -7,6 +7,12 @@ import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
 import { FBType, FilterButtonType } from './types'
 import { Typography } from '../typography'
 
+/**
+ * Special Button for the search section
+ * @param isOpen
+ * @param onClick
+ * @param rest
+ */
 export const FilterButton: FunctionComponent<FilterButtonType> = ({ isOpen, onClick, ...rest }) => (
   <Box padding=".25rem 1rem">
     <FB {...rest} isOpen={isOpen} onClick={onClick}>

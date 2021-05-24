@@ -26,6 +26,11 @@ const C = styled.div`
   }
 `
 
+/**
+ * Container
+ * @param children
+ * @param rest* @constructor
+ */
 export const Container = ({ children, ...rest }) => {
   return <C {...rest}>{children}</C>
 }

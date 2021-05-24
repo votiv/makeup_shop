@@ -25,8 +25,10 @@ import { AnchorButton } from '../../components/buttons'
 import { DEFAULT_COLOR } from '../../utils/constants/constants'
 import { ColorType, ProductType } from '../../types/types'
 
-
-
+/**
+ * Product Details page
+ * @param product
+ */
 const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
   const {
     product_colors,
@@ -41,6 +43,9 @@ const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
     brand
   } = product
 
+  /**
+   * If the current product doesn't have colors, assign the default color
+   */
   const color = product_colors?.length > 0
     ? getRandomItem<ColorType>(product_colors).hex_value
     : DEFAULT_COLOR
@@ -117,7 +122,7 @@ export default Product
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { db } = await openDb()
-  const collection = await db.collection('makeup')
+  const collection: Collection<ProductType> = await db.collection('makeup')
   const data = await collection.find()
   const products = await data.toArray()
 
@@ -132,6 +137,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params
   const { db } = await openDb()
   const collection: Collection<ProductType> = await db.collection('makeup')
+  // @ts-ignore  // id gives TS error, not sure why
   const product = await collection.find({ id: parseInt(id as string) })
   const found = await product.next()
 

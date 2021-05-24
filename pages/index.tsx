@@ -1,6 +1,9 @@
+import { FunctionComponent, useCallback, useEffect, useReducer, KeyboardEvent } from 'react'
 import { useSWRInfinite } from 'swr'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { Collection } from 'mongodb'
+import { GetStaticProps } from 'next'
 
 import { fetcher } from '../utils/fetcher'
 import { bwText } from '../utils/calcTextColor'
@@ -13,13 +16,15 @@ import { Button } from '../components/buttons'
 import Spinner from '../components/Spinner'
 import { Typography } from '../components/typography'
 import { FilterHeader } from '../components/filter'
-import { FunctionComponent, useCallback, useEffect, useReducer } from 'react'
 import { SearchActionKind, SearchActionType, SearchStateType } from '../components/filter/types'
-import { GetStaticProps } from 'next'
 import { openDb } from '../middleware/database'
-import { Collection } from 'mongodb'
 import { IndexType, ProductType } from '../types/types'
 
+/**
+ * Reducer to be invoked on search action
+ * @param state
+ * @param action
+ */
 const searchReducer = (state: SearchStateType, action: SearchActionType) => {
   switch (action.type) {
     case SearchActionKind.Search:
@@ -29,9 +34,17 @@ const searchReducer = (state: SearchStateType, action: SearchActionType) => {
   }
 }
 
+/**
+ * Products List page
+ * @param props
+ */
 const Index: FunctionComponent<IndexType> = props => {
   const router = useRouter()
 
+  /**
+   * Get the list of products. On first load the page will come statically generated with the initial list,
+   * after which SWR help out with caching, pagination, etc.
+   */
   const { data, error, size, setSize, mutate } = useSWRInfinite<Array<ProductType>, Error>(
     (pageIndex, previousPageData) =>
       (previousPageData && !previousPageData.length)
@@ -47,9 +60,12 @@ const Index: FunctionComponent<IndexType> = props => {
   const isEmpty = data?.length === 0 || data?.[0]?.length === 0
   const isReachingEnd = !!isEmpty || products?.length < PAGE_SIZE || (data && data[data.length - 1]?.length < PAGE_SIZE)
 
+  /**
+   * We have to manually run the fetcher for search
+   */
   const [search, dispatchSearch] = useReducer(searchReducer, '')
   useEffect(() => {
-    fetcher(`/api/products?search=${search}`, {
+    fetcher<ProductType[][]>(`/api/products?search=${search}`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -58,21 +74,33 @@ const Index: FunctionComponent<IndexType> = props => {
       .then(res => mutate(res, false))
   }, [search])
 
+  /**
+   * Loading state
+   */
   if (!products) {
     return <AbsoluteCentered><Spinner color={MAIN_BLUE_COLOR} /></AbsoluteCentered>
   }
 
+  /**
+   * Error state
+   */
   if (error) {
     return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
   }
 
-  const handleCardKeyNav = useCallback(id => event => {
+  /**
+   * When tabbing through the list, the user should be able to access the details page of a product by pressing Enter
+   */
+  const handleCardKeyNav = useCallback((id: string) => async (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
-      router.push(`/product/${id}`)
+      await router.push(`/product/${id}`)
     }
   }, [])
 
-  const mapProducts = useCallback((product, index) => (
+  /**
+   * Create the list of Card components
+   */
+  const mapProducts = useCallback((product: ProductType, index: number) => (
     <Link
       href="/product/[id]"
       as={`/product/${product.id}`}
@@ -128,7 +156,6 @@ const Index: FunctionComponent<IndexType> = props => {
               </Box>
             )
           }
-
         </>
       </Box>
     </Container>

@@ -1,3 +1,7 @@
+/**
+ * Loading spinner
+ * @param color
+ */
 const Spinner = ({ color }) => (
   <svg width="105" height="105" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg" fill={color ? color : '#fff'}>
     <circle cx="12.5" cy="12.5" r="12.5">

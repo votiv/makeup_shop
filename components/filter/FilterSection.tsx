@@ -7,6 +7,11 @@ import { FBType, SearchActionKind, SearchType } from './types'
 import { MAIN_BLUE_COLOR } from '../../utils/constants/constants'
 import { Button } from '../buttons'
 
+/**
+ * Filter Section for the header
+ * @param isOpen
+ * @param doSearch
+ */
 export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, doSearch }) => {
   const input = useRef(null)
 

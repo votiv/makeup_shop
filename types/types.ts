@@ -10,6 +10,7 @@ export interface ColorType {
 }
 
 export interface ProductType {
+  id: string
   product_colors: ColorType[]
   name: string
   price: string
@@ -20,6 +21,7 @@ export interface ProductType {
   product_link: string
   api_featured_image: string
   brand: string
+  bColor: string
 }
 
 export interface ExtendedRequest {

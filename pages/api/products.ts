@@ -8,6 +8,9 @@ import { ExtendedRequest, ProductType } from '../../types/types'
 const handler = nextConnect<NextApiRequest, NextApiResponse>()
 handler
   .use(dbMiddleware)
+  /**
+   * GET return paginated or filtered results from DB
+   */
   .get<ExtendedRequest>(async (req, res) => {
     try {
       const { perPage = '20', page = '0', search = '' } = req.query
