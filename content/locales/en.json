@@ -1,0 +1,14 @@
+{
+  "label.error": "Something went horribly wrong, please try again later",
+  "label.loadMore": "Load more",
+  "label.buyNow": "Buy Now",
+  "label.back": "Back",
+  "label.rating": "Rating",
+  "label.filter": "Filter",
+  "label.clearFilter": "Clear filter",
+  "label.searchPlaceholder": "Enter search value",
+  "label.search": "Search",
+  "label.price": "Price",
+  "label.brand": "Brand",
+  "label.unrated": "unrated"
+}

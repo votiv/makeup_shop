@@ -1,6 +1,7 @@
 import { FunctionComponent, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
+import { useIntl } from 'react-intl'
 
 import { Box, FlexColumn, FlexRow } from '../layout'
 import { FBType, SearchActionKind, SearchType } from './types'
@@ -14,6 +15,7 @@ import { Button } from '../buttons'
  */
 export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, doSearch }) => {
   const input = useRef(null)
+  const intl = useIntl()
 
   const onInputChange = debounce(
     event => doSearch({ type: SearchActionKind.Search, payload: event.target.value }),
@@ -40,14 +42,14 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
     <FS isOpen={isOpen}>
       <FilterWrapper isOpen={isOpen}>
         <FlexColumn>
-          <Label htmlFor="search">Search</Label>
+          <Label htmlFor="search">{intl.formatMessage({ id: 'label.search' })}</Label>
           <Box height="2rem" padding=".5rem">
             <Input
               ref={input}
               name="search"
               onChange={onInputChange}
               onKeyUp={onKeyUp}
-              placeholder="Enter search value"
+              placeholder={intl.formatMessage({ id: 'label.searchPlaceholder' })}
               autoComplete="off"
             />
           </Box>
@@ -56,7 +58,7 @@ export const FilterSection: FunctionComponent<SearchType & FBType> = ({ isOpen, 
           onClick={clearFilter}
           color={MAIN_BLUE_COLOR}
         >
-          Clear filters
+          {intl.formatMessage({ id: 'label.clearFilter' })}
         </ClearButton>
       </FilterWrapper>
     </FS>

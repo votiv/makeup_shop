@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react'
+import { useIntl } from 'react-intl'
 
 import { RatingType } from './types'
 
@@ -7,6 +8,12 @@ import { RatingType } from './types'
  * @param rating
  * @param rest
  */
-export const Rating: FunctionComponent<RatingType> = ({ rating, ...rest }) => <p {...rest}>Rating: {
-  rating ? rating : 'unrated'
-}</p>
+export const Rating: FunctionComponent<RatingType> = ({ rating, ...rest }) => {
+  const intl = useIntl()
+
+  return (
+    <p {...rest}>
+      {intl.formatMessage({ id: 'label.rating' })}: {rating ? rating : intl.formatMessage({id: 'label.unrated' })}
+    </p>
+  )
+}

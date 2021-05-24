@@ -1,0 +1,14 @@
+{
+  "label.error": "Etwas ist schrecklich schief gelaufen, bitte versuchen Sie es später noch einmal",
+  "label.loadMore": "Mehr laden",
+  "label.buyNow": "Sofort kaufen",
+  "label.back": "Zurück",
+  "label.rating": "Bewertung",
+  "label.filter": "Filter",
+  "label.clearFilter": "Filter löschen",
+  "label.searchPlaceholder": "Suchwort eingeben",
+  "label.search": "Suchen",
+  "label.price": "Preis",
+  "label.brand": "Marke",
+  "label.unrated": "ohne Bewertung"
+}

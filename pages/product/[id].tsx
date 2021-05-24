@@ -2,9 +2,10 @@ import { FunctionComponent } from 'react'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Tippy from '@tippyjs/react'
 import styled from 'styled-components'
-import 'tippy.js/dist/tippy.css';
-import { Collection } from 'mongodb'
+import 'tippy.js/dist/tippy.css'
+import { useIntl } from 'react-intl'
 
+import { Collection } from 'mongodb'
 import { openDb } from '../../middleware/database'
 import { getRandomItem } from '../../utils/arrayUtils'
 import {
@@ -30,6 +31,7 @@ import { ColorType, ProductType } from '../../types/types'
  * @param product
  */
 const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
+  const intl = useIntl()
   const {
     product_colors,
     name,
@@ -64,8 +66,10 @@ const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
         <DetailsWrapper>
           <Box marginBottom="1rem">
             <DetailsTitle>
-              <p style={{ flex: '1 1 auto' }}>Brand: {brand}</p>
-              <p>Price: {`${price_sign || '$'} ${price}`}</p>
+              <Typography variant="p">{intl.formatMessage({ id: 'label.brand' })}: {brand}</Typography>
+              <Typography variant="p">{
+                `${intl.formatMessage({ id: 'label.price' })}: ${`${price_sign || '$'}${price}`}`
+              }</Typography>
               <Rating rating={rating} />
             </DetailsTitle>
           </Box>
@@ -104,10 +108,10 @@ const Product: FunctionComponent<{ product: ProductType }> = ({ product }) => {
           <Box width="14rem">
             <FlexRowSpaceBetween>
               <AnchorButton url={product_link} color={color}>
-                Buy Now
+                {intl.formatMessage({ id: 'label.buyNow' })}
               </AnchorButton>
               <AnchorButton url="/" color={color} bwButton>
-                Back
+                {intl.formatMessage({ id: 'label.back' })}
               </AnchorButton>
             </FlexRowSpaceBetween>
           </Box>

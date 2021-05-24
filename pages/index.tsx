@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Collection } from 'mongodb'
 import { GetStaticProps } from 'next'
+import { useIntl } from 'react-intl'
 
 import { fetcher } from '../utils/fetcher'
 import { bwText } from '../utils/calcTextColor'
@@ -40,6 +41,7 @@ const searchReducer = (state: SearchStateType, action: SearchActionType) => {
  */
 const Index: FunctionComponent<IndexType> = props => {
   const router = useRouter()
+  const intl = useIntl()
 
   /**
    * Get the list of products. On first load the page will come statically generated with the initial list,
@@ -85,7 +87,7 @@ const Index: FunctionComponent<IndexType> = props => {
    * Error state
    */
   if (error) {
-    return <AbsoluteCentered>Something went horribly wrong, please try again later</AbsoluteCentered>
+    return <AbsoluteCentered>{intl.formatMessage({ id: 'label.error' })}</AbsoluteCentered>
   }
 
   /**
@@ -115,7 +117,9 @@ const Index: FunctionComponent<IndexType> = props => {
         />
         <CardDetails color={bwText(product.bColor || DEFAULT_COLOR)}>
           <Typography variant="h3">{product.name}</Typography>
-          <Typography variant="p">Price: {`${product.price_sign || '$'} ${product.price}`}</Typography>
+          <Typography variant="p">{
+            `${intl.formatMessage({ id: 'label.price' })}: ${`${product.price_sign || '$'}${product.price}`}`
+          }</Typography>
         </CardDetails>
       </Card>
     </Link>
@@ -150,7 +154,7 @@ const Index: FunctionComponent<IndexType> = props => {
                         color={MAIN_BLUE_COLOR}
                         style={{ borderRadius: '.33rem' }}
                       >
-                        Load more
+                        {intl.formatMessage({ id: 'label.loadMore' })}
                       </Button>}
                 </FlexRowCentered>
               </Box>

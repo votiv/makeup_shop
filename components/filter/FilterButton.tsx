@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { FunctionComponent } from 'react'
+import { useIntl } from 'react-intl'
 
 import { Box, FlexRowSpaceBetween } from '../layout'
 import { FilterIcon } from '../icons'
@@ -13,16 +14,21 @@ import { Typography } from '../typography'
  * @param onClick
  * @param rest
  */
-export const FilterButton: FunctionComponent<FilterButtonType> = ({ isOpen, onClick, ...rest }) => (
-  <Box padding=".25rem 1rem">
-    <FB {...rest} isOpen={isOpen} onClick={onClick}>
-      <FilterInner width="5rem">
-        <FilterIcon isOpen={isOpen} />
-        <HidingFilter variant="p" align="center">Filter</HidingFilter>
-      </FilterInner>
-    </FB>
-  </Box>
-)
+export const FilterButton: FunctionComponent<FilterButtonType> = ({ isOpen, onClick, ...rest }) => {
+  const intl = useIntl()
+  return (
+    <Box padding=".25rem 1rem">
+      <FB {...rest} isOpen={isOpen} onClick={onClick}>
+        <FilterInner width="5rem">
+          <FilterIcon isOpen={isOpen} />
+          <HidingFilter variant="p" align="center">
+            {intl.formatMessage({ id: 'label.filter' })}
+          </HidingFilter>
+        </FilterInner>
+      </FB>
+    </Box>
+  )
+}
 
 const FB = styled.button<FBType>`
   border: 1px solid ${({ isOpen }) => isOpen ? 'grey' : MAIN_BLUE_COLOR};
